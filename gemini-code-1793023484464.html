@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FINDKOST - Cari Kos Jogja Cepat & Langsung Kontak Pemilik</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <i class="ph-bold ph-house-line text-2xl text-emerald-600"></i>
+        <span class="text-xl font-black tracking-tight text-slate-900">FIND<span class="text-emerald-600">KOST</span></span>
+      </div>
+      
+      <!-- TOMBOL PASANG KOS -->
+      <a href="https://forms.google.com" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm hover:shadow transition-all duration-150 border border-emerald-500/30 cursor-pointer select-none">
+        <i class="ph-bold ph-plus-circle text-lg"></i>
+        <span>Pasang Kos Gratis</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO & FILTER SECTION -->
+  <section class="max-w-6xl mx-auto px-4 pt-6 pb-4 w-full">
+    <div class="mb-5">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Cari Kos di Jogja Tanpa Ribet</h1>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <!-- Search Input -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Cari Kos / Area / Fasilitas</label>
+        <div class="relative">
+          <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
+          <input type="text" id="searchInput" placeholder="Contoh: AC, Jakal, UGM, LV..." class="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all" />
+        </div>
+      </div>
+
+      <!-- Filter Tipe -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Tipe Kos</label>
+        <select id="typeFilter" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+          <option value="all">Semua Tipe</option>
+          <option value="Putra">Khusus Putra</option>
+          <option value="Putri">Khusus Putri</option>
+          <option value="Campur">Campur / Pasutri</option>
+        </select>
+      </div>
+
+      <!-- Filter Wilayah -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Wilayah</label>
+        <select id="areaFilter" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+          <option value="all">Semua Wilayah</option>
+          <option value="Sleman">Sleman</option>
+          <option value="Kota Jogja">Kota Jogja</option>
+          <option value="Bantul">Bantul</option>
+        </select>
+      </div>
+
+      <!-- Filter Harga Maksimal -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Budget Maksimal</label>
+        <select id="priceFilter" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+          <option value="all">Semua Harga</option>
+          <option value="700000">< Rp 700.000 / bln</option>
+          <option value="1000000">< Rp 1.000.000 / bln</option>
+          <option value="1500000">< Rp 1.500.000 / bln</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTING GRID -->
+  <main class="max-w-6xl mx-auto px-4 py-4 flex-1 w-full">
+    <div class="flex items-center justify-between mb-4">
+      <span id="resultCount" class="text-sm font-semibold text-slate-600">Memuat kos...</span>
+    </div>
+
+    <div id="kostContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Di-render oleh JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-16">
+      <i class="ph ph-magnifying-glass text-5xl text-slate-300"></i>
+      <p class="text-slate-600 font-semibold mt-3">Nggak ada kos yang cocok sama filter kamu.</p>
+      <p class="text-slate-400 text-sm">Coba longgarin budget atau cari kata kunci lain.</p>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 FINDKOST. Platform kurasi kos independen di Yogyakarta.</p>
+  </footer>
+
+  <!-- SCRIPT & DATABASE HASIL RAPIAN -->
+  <script>
+    const kostData = [
+      {
+        id: 1,
+        name: "Kost Jogja Asri",
+        type: "Putra",
+        area: "Sleman",
+        subArea: "Sleman",
+        price: 1400000,
+        phone: "6288216061722",
+        facilities: ["Ruangan AC", "Bed Single", "KM Dalam", "Free Wi-Fi", "Free Listrik", "Parkir Luas"],
+        image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80",
+        notes: "No LV, No Pasutri."
+      },
+      {
+        id: 2,
+        name: "Kost Putra JEC",
+        type: "Putra",
+        area: "Bantul",
+        subArea: "Dekat JEC / Banguntapan",
+        price: 650000,
+        phone: "6282259390609",
+        facilities: ["KM Luar (3 Kamar Mandi)", "Free Wi-Fi", "Free Air & Sampah", "Dapur Umum", "Kulkas Bersama"],
+        image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80",
+        notes: "2 kloset jongkok, 1 duduk. Parkir luas & jemuran lega."
+      },
+      {
+        id: 3,
+        name: "Kost Campur AC & Non-AC",
+        type: "Campur",
+        area: "Kota Jogja",
+        subArea: "Kota Jogja",
+        price: 850000,
+        phone: "6281227943251",
+        facilities: ["Pilihan AC / Non-AC", "Free Wi-Fi", "CCTV Keamanan", "Dapur Bersama", "KM Luar (Kloset Duduk)", "Parkir Luas"],
+        image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80",
+        notes: "AC token mandiri, non-AC gratis listrik."
+      },
+      {
+        id: 4,
+        name: "Kost Putri JCM",
+        type: "Putri",
+        area: "Sleman",
+        subArea: "Dekat JCM (Jogja City Mall)",
+        price: 600000,
+        phone: "6289514516434",
+        facilities: ["Kasur Lengkap + Sprei", "Meja & Lemari", "Kipas Angin", "Free Wi-Fi & Sampah", "Sofa Ruang Tamu", "KM Luar"],
+        image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=600&q=80",
+        notes: "Token listrik mandiri, lingkungan aman & bersih."
+      },
+      {
+        id: 5,
+        name: "Kost Cowo Ngaglik",
+        type: "Putra",
+        area: "Sleman",
+        subArea: "Jakal KM 10 (Nglaban)",
+        price: 800000,
+        phone: "6282199269238",
+        facilities: ["Bangunan Baru", "KM Dalam", "Free Listrik", "Kipas Angin", "Wi-Fi 50 Mbps", "Kasur & Meja", "Parkir Motor"],
+        image: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef7?auto=format&fit=crop&w=600&q=80",
+        notes: "Sinduharjo, Ngaglik. Suasana tenang."
+      },
+      {
+        id: 6,
+        name: "Kost Sapo Mreneo",
+        type: "Campur",
+        area: "Sleman",
+        subArea: "Jakal KM 5 (Dekat Tengkleng Gajah)",
+        price: 1300000,
+        phone: "6287855064942",
+        facilities: ["Bisa LV / Pasutri", "Kamar Mandi Dalam", "Kasur Lengkap", "Wi-Fi Cepat"],
+        image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
+        notes: "Akses fleksibel & strategis pinggir Jakal."
+      },
+      {
+        id: 7,
+        name: "Kost Putra Muslim Kampus",
+        type: "Putra",
+        area: "Sleman",
+        subArea: "Condongcatur (Dekat UPN / YKPN)",
+        price: 650000,
+        phone: "6281234567890",
+        facilities: ["Free Wi-Fi", "Free Listrik & Air", "Kasur & Lemari", "KM Luar", "Parkir Motor"],
+        image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80",
+        notes: "Dekat UPN, YKPN, Amikom, Mercu Buana, UGM, UNY."
+      },
+      {
+        id: 8,
+        name: "Kost Putri UGM Klebengan",
+        type: "Putri",
+        area: "Sleman",
+        subArea: "Klebengan / Caturtunggal (UGM)",
+        price: 1200000,
+        phone: "628121201102",
+        facilities: ["AC Dingin", "Kamar Mandi Dalam", "Kasur & Lemari", "Wi-Fi Cepat"],
+        image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=600&q=80",
+        notes: "Promo: 1,1 jt per 6 bulan | 1 jt per tahun."
+      },
+      {
+        id: 9,
+        name: "Kost Putra Maguwo",
+        type: "Putra",
+        area: "Sleman",
+        subArea: "Maguwoharjo",
+        price: 1300000,
+        phone: "6281249945138",
+        facilities: ["AC", "KM Dalam (Kloset Duduk)", "Meja & Kursi Kerja", "Dapur Bersama", "Akses 24 Jam", "CCTV"],
+        image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=600&q=80",
+        notes: "Meteran 900W sendiri, kasur 120x200, parkir motor."
+      },
+      {
+        id: 10,
+        name: "Wisma Putri & Pasutri UII",
+        type: "Campur",
+        area: "Sleman",
+        subArea: "Jakal (Belakang Kampus UII)",
+        price: 1100000,
+        phone: "6281281092722",
+        facilities: ["AC", "Water Heater", "KM Dalam (Kloset Duduk)", "Kasur & Lemari", "Akses 24 Jam", "Pet Friendly (Kucing)"],
+        image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=600&q=80",
+        notes: "Token 1300W sendiri. Bisa putri/pasutri. Boleh bawa kucing."
+      }
+    ];
+
+    const container = document.getElementById('kostContainer');
+    const resultCount = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const areaFilter = document.getElementById('areaFilter');
+    const priceFilter = document.getElementById('priceFilter');
+
+    function formatRupiah(number) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+    }
+
+    function renderCards(data) {
+      container.innerHTML = "";
+      resultCount.textContent = `Menampilkan ${data.length} pilihan kos`;
+
+      if (data.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      data.forEach(item => {
+        const waText = encodeURIComponent(`Halo, aku lihat iklan kos "${item.name}" di FINDKOST. Apakah kamar seharga ${formatRupiah(item.price)} masih tersedia?`);
+        const waLink = `https://wa.me/${item.phone.replace(/[^0-9]/g, '')}?text=${waText}`;
+
+        let badgeColor = "bg-blue-100 text-blue-700";
+        if (item.type === "Putri") badgeColor = "bg-rose-100 text-rose-700";
+        if (item.type === "Campur") badgeColor = "bg-purple-100 text-purple-700";
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="relative h-44 overflow-hidden bg-slate-100">
+              <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" loading="lazy" />
+              <div class="absolute top-3 left-3 flex gap-2">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${badgeColor}">
+                  ${item.type}
+                </span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/70 text-white backdrop-blur-sm">
+                  ${item.area}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-4">
+              <div class="flex items-baseline justify-between mb-1">
+                <h3 class="font-bold text-slate-900 text-base leading-snug">${item.name}</h3>
+              </div>
+              <p class="text-xs text-slate-500 mb-3 flex items-center gap-1">
+                <i class="ph ph-map-pin text-slate-400"></i> ${item.subArea}
+              </p>
+
+              <div class="text-emerald-700 font-extrabold text-lg mb-3">
+                ${formatRupiah(item.price)} <span class="text-xs font-normal text-slate-500">/ bulan</span>
+              </div>
+
+              <!-- Tags Fasilitas -->
+              <div class="flex flex-wrap gap-1.5 mb-3">
+                ${item.facilities.slice(0, 3).map(f => `
+                  <span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
+                    ${f}
+                  </span>
+                `).join('')}
+                ${item.facilities.length > 3 ? `<span class="text-[11px] text-slate-400 self-center">+${item.facilities.length - 3} lainnya</span>` : ''}
+              </div>
+
+              ${item.notes ? `<p class="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 italic">"${item.notes}"</p>` : ''}
+            </div>
+          </div>
+
+          <div class="p-4 pt-0">
+            <a href="${waLink}" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-medium py-2.5 rounded-xl text-sm transition-all shadow-sm">
+              <i class="ph-bold ph-whatsapp-logo text-lg"></i> Hubungi Pemilik
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function applyFilter() {
+      const q = searchInput.value.toLowerCase();
+      const type = typeFilter.value;
+      const area = areaFilter.value;
+      const price = priceFilter.value;
+
+      const filtered = kostData.filter(k => {
+        const matchSearch = k.name.toLowerCase().includes(q) || 
+                            k.subArea.toLowerCase().includes(q) || 
+                            (k.notes && k.notes.toLowerCase().includes(q)) ||
+                            k.facilities.some(f => f.toLowerCase().includes(q));
+        const matchType = (type === 'all') || (k.type === type);
+        const matchArea = (area === 'all') || (k.area === area);
+        const matchPrice = (price === 'all') || (k.price <= parseInt(price));
+
+        return matchSearch && matchType && matchArea && matchPrice;
+      });
+
+      renderCards(filtered);
+    }
+
+    searchInput.addEventListener('input', applyFilter);
+    typeFilter.addEventListener('change', applyFilter);
+    areaFilter.addEventListener('change', applyFilter);
+    priceFilter.addEventListener('change', applyFilter);
+
+    // Render data langsung
+    renderCards(kostData);
+  </script>
+</body>
+</html>
